@@ -26,5 +26,14 @@ pipeline {
                 sh './jenkins/scripts/deliver.sh'
             }
         }
-    }
+        stage('SonarQubeReport')
+            steps {
+                sh 'mavenHome/bin/mvn sonar:sonar'
+            }
+        } 
+        stage('Nexus')
+        steps {
+            sh 'mavenHome/bin/mvn deploy'
+            }
+        }
 }
