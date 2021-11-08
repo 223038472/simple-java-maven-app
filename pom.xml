@@ -18,6 +18,22 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  <distributionManagement>
+	
+	    <repository>
+	      <id>nexus</id>
+	      <name>Releases Nexus Repository</name>  
+	      <url>http:///repository/releases/</url>
+		    
+		          
+	    </repository>
+	    
+	    <snapshotRepository>
+	      <id>nexus</id>
+	      <name>Snapshot Nexus Repository </name>
+	      <url>http:///repository/snapshot/</url>
+	    </snapshotRepository>
+	</distributionManagement>
   <build>
     <pluginManagement>
       <plugins>
