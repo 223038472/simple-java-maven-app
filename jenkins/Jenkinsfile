@@ -1,12 +1,15 @@
-pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
+pipeline 
+    agent any 
+        tool {
+            maven 'maven3'
+            
+    stage ( SCM clone)
+        steps {
+            readTrusted 'readTrusted \'https://github.com/223038472/simple-java-maven-app.git\''
         }
     }
     stages {
-        stage('Build') {
+        steps('Build') {
             steps {
                 sh 'mvn -B -DskipTests clean package'
             }
@@ -25,15 +28,29 @@ pipeline {
             steps {
                 sh './jenkins/scripts/deliver.sh'
             }
-        }
-        stage('SonarQubeReport')
-            steps {
-                sh 'mavenHome/bin/mvn sonar:sonar'
-            }
         } 
         stage('Deploy')
         steps {
             sh 'mavenHome/bin/mvn deploy'
             }
-        }
+            
+        nexusArtifactUploader artifacts: [
+            [
+            artifactId: 'my-app', 
+            classifier: '', 
+            file: 'target/my-app-1.0.jar', 
+            type: 'jar'
+            ]
+
+        ],
+    
+        credentialsId: 'RR1zWAiA', 
+        groupId: 'com.mycompany.app', 
+        nexusUrl: ' https://nexusprod.corp.intranet:8443/', 
+        nexusVersion: 'nexus3', 
+        protocol: 'https', 
+        repository: 'maven/releases', 
+        version: 'Nexus3'
+
+    }
 }
